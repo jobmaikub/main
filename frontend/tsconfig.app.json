@@ -19,5 +19,5 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["src", "../backend/src/lib", "../backend/dist/admin/lib"]
+  "include": ["src"]
 }

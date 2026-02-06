@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Faculty } from "@/lib/faculties.api";
+
 import { Major } from "@/lib/majors.api";
 
 interface EditMajorsSheetProps {
@@ -24,7 +24,6 @@ interface EditMajorsSheetProps {
   onOpenChange: (open: boolean) => void;
   onSubmit: (data: Major) => void;
   major: Major | null;
-  faculties: Faculty[];
 }
 
 export function EditMajorsSheet({
@@ -32,7 +31,6 @@ export function EditMajorsSheet({
   onOpenChange,
   onSubmit,
   major,
-  faculties,
 }: EditMajorsSheetProps) {
   const [name, setName] = useState("");
   const [facultyId, setFacultyId] = useState<number | "">("");
@@ -102,14 +100,10 @@ export function EditMajorsSheet({
               </SelectTrigger>
 
               <SelectContent className="bg-white">
-                {faculties.map((faculty) => (
-                  <SelectItem
-                    key={faculty.faculty_id}
-                    value={faculty.faculty_id.toString()}
-                  >
-                    {faculty.name}
-                  </SelectItem>
-                ))}
+                <SelectItem value="1">Engineering</SelectItem>
+                <SelectItem value="2">Science</SelectItem>
+                <SelectItem value="3">Arts</SelectItem>
+                <SelectItem value="4">Business</SelectItem>
               </SelectContent>
             </Select>
           </div>

@@ -1,8 +1,8 @@
+// AddMajorsSheet.tsx
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Faculty } from "@/lib/faculties.api";
 import {
   Sheet,
   SheetContent,
@@ -21,7 +21,6 @@ interface AddMajorsSheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSubmit: (data: MajorFormData) => Promise<void> | void;
-  faculties: Faculty[];
 }
 
 export interface MajorFormData {
@@ -33,7 +32,6 @@ export function AddMajorsSheet({
   open,
   onOpenChange,
   onSubmit,
-  faculties,
 }: AddMajorsSheetProps) {
   const [formData, setFormData] = useState<MajorFormData>({
     name: "",
@@ -105,14 +103,10 @@ export function AddMajorsSheet({
               </SelectTrigger>
 
               <SelectContent className="bg-white">
-                {faculties.map((faculty) => (
-                  <SelectItem
-                    key={faculty.faculty_id}
-                    value={faculty.faculty_id.toString()}
-                  >
-                    {faculty.name}
-                  </SelectItem>
-                ))}
+                <SelectItem value="1">Engineering</SelectItem>
+                <SelectItem value="2">Science</SelectItem>
+                <SelectItem value="3">Arts</SelectItem>
+                <SelectItem value="4">Business</SelectItem>
               </SelectContent>
             </Select>
           </div>

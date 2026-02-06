@@ -1,9 +1,8 @@
+// EditSkillsSheet.tsx
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Faculty } from "@/lib/faculties.api";
-import { Major } from "@/lib/majors.api";
 import {
   Sheet,
   SheetContent,
@@ -17,7 +16,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
 import { Skill } from "@/lib/skills.api";
 import { SkillFormData } from "./AddSkillsSheet";
 
@@ -25,8 +23,6 @@ interface EditSkillsSheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   skill: Skill | null;
-  faculties: Faculty[];
-  majors: Major[];
   onSubmit: (
     data: SkillFormData & { skill_id: number }
   ) => Promise<void>;
@@ -37,29 +33,23 @@ export function EditSkillsSheet({
   onOpenChange,
   onSubmit,
   skill,
-  faculties,
-  majors,
 }: EditSkillsSheetProps) {
   const [formData, setFormData] = useState<SkillFormData>({
     name: "",
-    faculty_id: 0,
-    major_id: 0,
+    faculty: "",
+    major: "",
   });
 
-  /* map skill -> form */
+  /** map Skill → Form */
   useEffect(() => {
-  if (
-    skill &&
-    faculties.length > 0 &&
-    majors.length > 0
-  ) {
-    setFormData({
-      name: skill.name,
-      faculty_id: skill.category?.faculty_id ?? 0,
-      major_id: skill.category?.major_id ?? 0,
-    });
-  }
-}, [skill, faculties, majors]);
+    if (skill) {
+      setFormData({
+        name: skill.name,
+        faculty: skill.category.faculty,
+        major: skill.category.major,
+      });
+    }
+  }, [skill]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,83 +73,73 @@ export function EditSkillsSheet({
         </SheetHeader>
 
         <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Skill name */}
+          {/* Skill Name */}
           <div className="space-y-2">
-            <Label>Skill Name *</Label>
+            <Label>
+              Skill Name <span className="text-destructive">*</span>
+            </Label>
             <Input
               value={formData.name}
               onChange={(e) =>
                 setFormData({ ...formData, name: e.target.value })
               }
               required
+              className="bg-white"
             />
           </div>
 
           {/* Faculty */}
           <div className="space-y-2">
-            <Label>Faculty *</Label>
-
+            <Label>
+              Faculty <span className="text-destructive">*</span>
+            </Label>
             <Select
-              value={formData.faculty_id ? String(formData.faculty_id) : ""}
+              value={formData.faculty}
               onValueChange={(v) =>
-                setFormData({
-                  ...formData,
-                  faculty_id: Number(v),
-                  major_id: 0,
-                })
+                setFormData({ ...formData, faculty: v })
               }
             >
-              <SelectTrigger>
-                <SelectValue placeholder="Select Faculty" />
+              <SelectTrigger className="bg-white">
+                <SelectValue />
               </SelectTrigger>
-
-              <SelectContent>
-                {faculties.map((f) => (
-                  <SelectItem
-                    key={f.faculty_id}
-                    value={String(f.faculty_id)}
-                  >
-                    {f.name}
-                  </SelectItem>
-                ))}
+              <SelectContent className="bg-white">
+                <SelectItem value="Engineering">Engineering</SelectItem>
+                <SelectItem value="Science">Science</SelectItem>
+                <SelectItem value="Arts">Arts</SelectItem>
+                <SelectItem value="Business">Business</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           {/* Major */}
           <div className="space-y-2">
-            <Label>Major *</Label>
-
+            <Label>
+              Major <span className="text-destructive">*</span>
+            </Label>
             <Select
-              value={formData.major_id ? String(formData.major_id) : ""}
+              value={formData.major}
               onValueChange={(v) =>
-                setFormData({
-                  ...formData,
-                  major_id: Number(v),
-                })
+                setFormData({ ...formData, major: v })
               }
             >
-              <SelectTrigger>
-                <SelectValue placeholder="Select Major" />
+              <SelectTrigger className="bg-white">
+                <SelectValue />
               </SelectTrigger>
-
-              <SelectContent>
-                {majors
-                  .filter(
-                    (m) => m.faculty_id === formData.faculty_id
-                  )
-                  .map((m) => (
-                    <SelectItem
-                      key={m.major_id}
-                      value={String(m.major_id)}
-                    >
-                      {m.name}
-                    </SelectItem>
-                  ))}
+              <SelectContent className="bg-white">
+                <SelectItem value="Computer Science">
+                  Computer Science
+                </SelectItem>
+                <SelectItem value="Information Technology">
+                  Information Technology
+                </SelectItem>
+                <SelectItem value="Digital Media">
+                  Digital Media
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
 
+          {/* Actions */}
           <div className="flex gap-3 pt-4">
             <Button
               type="button"
@@ -169,7 +149,6 @@ export function EditSkillsSheet({
             >
               Cancel
             </Button>
-
             <Button
               type="submit"
               className="flex-1 bg-[#4A5DF9] text-white"

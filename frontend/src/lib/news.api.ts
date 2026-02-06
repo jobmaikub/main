@@ -1,11 +1,4 @@
-import axios from "axios";
-
-export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL + "/news",
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
+const API_URL = import.meta.env.VITE_API_URL;
 
 export interface News {
   news_id: number;
@@ -19,25 +12,32 @@ export interface News {
 }
 
 export const getNews = async (): Promise<News[]> => {
-  const res = await api.get("/");
-  return res.data;
+  const res = await fetch(`${API_URL}/news`);
+  if (!res.ok) throw new Error("Failed to fetch news");
+  return res.json();
 };
 
-export const createNews = async (
-  data: Partial<News>
-): Promise<News> => {
-  const res = await api.post("/", data);
-  return res.data;
+export const createNews = async (data: Partial<News>): Promise<News> => {
+  const res = await fetch(`${API_URL}/news`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  return res.json();
 };
 
 export const updateNews = async (
   id: number,
   data: Partial<News>
 ): Promise<News> => {
-  const res = await api.patch(`/${id}`, data);
-  return res.data;
+  const res = await fetch(`${API_URL}/news/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  return res.json();
 };
 
 export const deleteNews = async (id: number): Promise<void> => {
-  await api.delete(`/${id}`);
+  await fetch(`${API_URL}/news/${id}`, { method: "DELETE" });
 };

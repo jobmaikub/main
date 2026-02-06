@@ -1,16 +1,10 @@
-import axios from "axios";
-
-export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL + "/skills",
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
+// skills.api.ts
+import { api } from "./axios";
 
 /* ---------- types ---------- */
 export interface SkillCategory {
-  faculty_id: number;
-  major_id: number;
+  faculty: string;
+  major: string;
 }
 
 export interface Skill {
@@ -23,23 +17,26 @@ export interface Skill {
 /* ใช้กับ form เท่านั้น */
 export interface SkillFormData {
   name: string;
-  faculty_id: number;
-  major_id: number;
+  faculty: string;
+  major: string;
   icon?: string;
 }
 
 /* ---------- api ---------- */
 export const getSkills = async (): Promise<Skill[]> => {
-  const res = await api.get("/");
+  const res = await api.get("/skills");
   return res.data;
 };
 
 export const createSkill = async (payload: {
   name: string;
-  category: SkillCategory;
+  category: {
+    faculty: string;
+    major: string;
+  };
   icon?: string;
 }) => {
-  const res = await api.post("/", payload);
+  const res = await api.post("/skills", payload);
   return res.data;
 };
 
@@ -51,10 +48,10 @@ export const updateSkill = async (
     icon?: string;
   }>
 ): Promise<Skill> => {
-  const res = await api.patch(`/${id}`, payload);
+  const res = await api.patch(`/skills/${id}`, payload);
   return res.data;
 };
 
 export const deleteSkill = async (id: number): Promise<void> => {
-  await api.delete(`/${id}`);
+  await api.delete(`/skills/${id}`);
 };

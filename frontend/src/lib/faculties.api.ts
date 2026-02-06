@@ -1,12 +1,5 @@
 import axios from "axios";
 
-export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL + "/faculties",
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
 export interface Faculty {
   faculty_id: number;
   name: string;
@@ -15,13 +8,17 @@ export interface Faculty {
   theme_color?: string;
 }
 
+const api = axios.create({
+  baseURL: "http://localhost:3000",
+});
+
 export const getFaculties = async (): Promise<Faculty[]> => {
-  const res = await api.get("/");
+  const res = await api.get("/faculties");
   return res.data;
 };
 
 export const createFaculty = async (data: { name: string }) => {
-  const res = await api.post("/", data);
+  const res = await api.post("/faculties", data);
   return res.data;
 };
 
@@ -29,10 +26,10 @@ export const updateFaculty = async (
   id: number,
   data: { name: string }
 ) => {
-  const res = await api.patch(`/${id}`, data);
+  const res = await api.patch(`/faculties/${id}`, data);
   return res.data;
 };
 
 export const deleteFaculty = async (id: number) => {
-  await api.delete(`/${id}`);
+  await api.delete(`/faculties/${id}`);
 };

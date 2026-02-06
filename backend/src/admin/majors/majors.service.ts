@@ -9,12 +9,7 @@ import { SupabaseService } from '../../supabase/supabase.service';
 export class MajorsService {
   constructor(private readonly supabase: SupabaseService) { }
 
-  async create(data: {
-    name: string;
-    name_th?: string;
-    description?: string;
-    faculty_id: number;
-  }) {
+  async create(data: { name: string; faculty_id: number }) {
     const { data: rpcData, error: idError } =
       await this.supabase.client.rpc('get_next_major_id');
 
@@ -56,12 +51,7 @@ export class MajorsService {
 
   async update(
     id: number,
-    data: Partial<{
-      name: string;
-      name_th?: string;
-      description?: string;
-      faculty_id?: number;
-    }>
+    data: Partial<{ name: string; faculty_id: number }>
   ) {
     console.log('UPDATE MAJOR:', { id, data });
 

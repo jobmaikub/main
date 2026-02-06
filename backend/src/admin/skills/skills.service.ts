@@ -13,10 +13,7 @@ export class SkillsService {
 
   async createSkill(data: {
     name: string;
-    category: {
-      faculty_id: number;
-      major_id: number;
-    };
+    category: any;
     icon?: string;
   }) {
     // 1. หา id ว่างที่น้อยที่สุด
@@ -50,6 +47,7 @@ export class SkillsService {
     return result;
   }
 
+
   async getSkills() {
     const { data, error } =
       await this.supabaseService.client
@@ -82,10 +80,7 @@ export class SkillsService {
     skillId: number,
     data: {
       name?: string;
-      category?: {
-        faculty_id: number;
-        major_id: number;
-      };
+      category?: any;
       icon?: string;
     },
   ) {

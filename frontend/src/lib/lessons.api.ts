@@ -1,15 +1,13 @@
+// src/lib/lessons.api.ts
 import axios from "axios";
 
-export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL + "/lessons",
-  headers: {
-    "Content-Type": "application/json",
-  },
+const api = axios.create({
+  baseURL: "http://localhost:3000",
 });
 
 export const lessonsApi = {
   getAll: (courseId?: number) =>
-    api.get("/", {
+    api.get("/lessons", {
       params: courseId ? { course_id: courseId } : {},
     }),
 
@@ -20,7 +18,7 @@ export const lessonsApi = {
     duration?: number;
     externalUrl?: string;
   }) =>
-    api.post("/", {
+    api.post("/lessons", {
       title: data.title,
       course_id: data.courseId,
       lesson_order: data.order,
@@ -38,7 +36,7 @@ export const lessonsApi = {
       externalUrl?: string;
     }
   ) =>
-    api.patch(`/${id}`, {
+    api.patch(`/lessons/${id}`, {
       title: data.title,
       course_id: data.courseId,
       lesson_order: data.order,
@@ -47,5 +45,5 @@ export const lessonsApi = {
     }),
 
   delete: (id: number) =>
-    api.delete(`/${id}`),
+    api.delete(`/lessons/${id}`),
 };

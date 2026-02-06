@@ -1,21 +1,17 @@
-import axios from "axios";
 import { User } from "@/data/usersData";
 
-export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL + "/users",
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
+const API_BASE = "http://localhost:3000/users";
 
 export async function fetchUsers(): Promise<User[]> {
-  const res = await api.get("/");
-  return res.data;
+  const res = await fetch(API_BASE);
+  if (!res.ok) throw new Error("Failed to fetch users");
+  return res.json();
 }
 
 export async function fetchUserById(id: number): Promise<User> {
-  const res = await api.get(`/${id}`);
-  return res.data;
+  const res = await fetch(`${API_BASE}/${id}`);
+  if (!res.ok) throw new Error("User not found");
+  return res.json();
 }
 
 export async function createUser(data: {
@@ -23,18 +19,39 @@ export async function createUser(data: {
   email: string;
   role: "admin" | "user";
 }): Promise<User> {
-  const res = await api.post("/", data);
-  return res.data;
+  const res = await fetch(API_BASE, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(err);
+  }
+
+  return res.json();
 }
 
 export async function deleteUser(id: number): Promise<void> {
-  await api.delete(`/${id}`);
+  const res = await fetch(`${API_BASE}/${id}`, {
+    method: "DELETE",
+  });
+  if (!res.ok) throw new Error("Delete failed");
 }
 
 export async function updateUserStatus(
   id: number,
   status: "unban" | "ban"
 ): Promise<User> {
-  const res = await api.patch(`/${id}/status`, { status });
-  return res.data;
+  const res = await fetch(`${API_BASE}/${id}/status`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ status }),
+  });
+
+  if (!res.ok) throw new Error("Update status failed");
+  return res.json();
 }

@@ -1,18 +1,15 @@
+// courses.api.ts
 import axios from "axios";
 
-export const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL + "/courses",
-    headers: {
-        "Content-Type": "application/json",
-    },
+const api = axios.create({
+    baseURL: "http://localhost:3000",
 });
 
 export const coursesApi = {
-
-    getAll: () => api.get("/"),
+    getAll: () => api.get("/courses"),
 
     create: (data: any) =>
-        api.post("/", {
+        api.post("/courses", {
             title: data.title,
             description: data.description,
             career_path: data.career,
@@ -30,7 +27,7 @@ export const coursesApi = {
         }),
 
     update: (id: number, data: any) =>
-        api.patch(`/${id}`, {
+        api.patch(`/courses/${id}`, {
             title: data.title,
             description: data.description,
             career_path: data.career_path,
@@ -43,5 +40,5 @@ export const coursesApi = {
         }),
 
     delete: (id: number) =>
-        api.delete(`/${id}`),
+        api.delete(`/courses/${id}`),
 };

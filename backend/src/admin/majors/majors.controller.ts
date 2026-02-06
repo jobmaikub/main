@@ -1,21 +1,12 @@
 import { Controller, Delete, Patch, Param, Body, Post, Get } from '@nestjs/common';
 import { MajorsService } from './majors.service';
-import { ParseIntPipe } from '@nestjs/common';
 
 @Controller('majors')
 export class MajorsController {
   constructor(private readonly service: MajorsService) {}
 
   @Post()
-  create(
-    @Body()
-    body: {
-      name: string;
-      name_th?: string;
-      description?: string;
-      faculty_id: number;
-    }
-  ) {
+  create(@Body() body: { name: string; faculty_id: number }) {
     return this.service.create(body);
   }
 
@@ -25,21 +16,13 @@ export class MajorsController {
   }
 
   @Patch(':id')
-  update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body()
-    body: {
-      name?: string;
-      name_th?: string;
-      description?: string;
-      faculty_id?: number;
-    }
-  ) {
-    return this.service.update(id, body);
+  update(@Param('id') id: string, @Body() body: any) {
+    return this.service.update(+id, body);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.service.remove(id);
+  remove(@Param('id') id: string) {
+    return this.service.remove(+id);
   }
 }
+

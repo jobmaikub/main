@@ -2,8 +2,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Faculty } from "@/lib/faculties.api";
-import { Major } from "@/lib/majors.api";
 import {
   Sheet,
   SheetContent,
@@ -22,37 +20,25 @@ interface AddSkillsSheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSubmit: (data: SkillFormData) => void;
-  faculties: Faculty[];
-  majors: Major[];
 }
 
 export interface SkillFormData {
   name: string;
-  faculty_id: number;
-  major_id: number;
+  faculty: string;
+  major: string;
 }
 
-export function AddSkillsSheet({
-  open,
-  onOpenChange,
-  onSubmit,
-  faculties,
-  majors
-}: AddSkillsSheetProps) {
+export function AddSkillsSheet({ open, onOpenChange, onSubmit }: AddSkillsSheetProps) {
   const [formData, setFormData] = useState<SkillFormData>({
     name: "",
-    faculty_id: 0,
-    major_id: 0,
+    faculty: "",
+    major: "",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(formData);
-    setFormData({
-  name: "",
-  faculty_id: 0,
-  major_id: 0
-});
+    setFormData({ name: "", faculty: "", major: "" });
     onOpenChange(false);
   };
 
@@ -78,60 +64,29 @@ export function AddSkillsSheet({
 
           <div className="space-y-2">
             <Label>Faculty <span className="text-destructive">*</span></Label>
-            <Select
-              value={String(formData.faculty_id)}
-              onValueChange={(v) =>
-                setFormData({
-                  ...formData,
-                  faculty_id: Number(v),
-                  major_id: 0
-                })
-              }
-            >
-              <SelectTrigger>
+            <Select onValueChange={(v) => setFormData({ ...formData, faculty: v })} required>
+              <SelectTrigger className="bg-white">
                 <SelectValue placeholder="Select Faculty" />
               </SelectTrigger>
-
-              <SelectContent>
-                {faculties.map((f) => (
-                  <SelectItem
-                    key={f.faculty_id}
-                    value={String(f.faculty_id)}
-                  >
-                    {f.name}
-                  </SelectItem>
-                ))}
+              <SelectContent className="bg-white">
+                <SelectItem value="Engineering">Engineering</SelectItem>
+                <SelectItem value="Science">Science</SelectItem>
+                <SelectItem value="Arts">Arts</SelectItem>
+                <SelectItem value="Business">Business</SelectItem>
               </SelectContent>
             </Select>
-
           </div>
 
           <div className="space-y-2">
             <Label>Major <span className="text-destructive">*</span></Label>
-            <Select
-              value={String(formData.major_id)}
-              onValueChange={(v) =>
-                setFormData({
-                  ...formData,
-                  major_id: Number(v),
-                })
-              }
-            >
-              <SelectTrigger>
+            <Select onValueChange={(v) => setFormData({ ...formData, major: v })} required>
+              <SelectTrigger className="bg-white">
                 <SelectValue placeholder="Select Major" />
               </SelectTrigger>
-
-              <SelectContent>
-                {majors
-                  .filter((m) => m.faculty_id === formData.faculty_id)
-                  .map((m) => (
-                    <SelectItem
-                      key={m.major_id}
-                      value={String(m.major_id)}
-                    >
-                      {m.name}
-                    </SelectItem>
-                  ))}
+              <SelectContent className="bg-white">
+                <SelectItem value="Computer Science">Computer Science</SelectItem>
+                <SelectItem value="Information Technology">Information Technology</SelectItem>
+                <SelectItem value="Digital Media">Digital Media</SelectItem>
               </SelectContent>
             </Select>
           </div>

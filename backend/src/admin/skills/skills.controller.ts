@@ -3,17 +3,14 @@ import { SkillsService } from './skills.service';
 
 @Controller('skills')
 export class SkillsController {
-  constructor(private readonly skillsService: SkillsService) { }
+  constructor(private readonly skillsService: SkillsService) {}
 
   @Post()
   createSkill(
     @Body()
     body: {
       name: string;
-      category: {
-        faculty_id: number;
-        major_id: number;
-      };
+      category: any;
       icon?: string;
     },
   ) {
@@ -36,10 +33,7 @@ export class SkillsController {
     @Body()
     body: {
       name?: string;
-      category?: {
-        faculty_id: number;
-        major_id: number;
-      };
+      category?: any;
       icon?: string;
     },
   ) {
